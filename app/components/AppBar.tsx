@@ -9,6 +9,7 @@ export default function ReAppBar(): React.JSX.Element {
   return (
     <AppBar
       position="static"
+      elevation={0}
       sx={{ backgroundColor: "transparent", height: "56px" }}
     >
       <Container maxWidth="xl">
