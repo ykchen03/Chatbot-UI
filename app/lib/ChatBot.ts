@@ -3,6 +3,7 @@ export default async function generateBotResponse(
   promptType: PromptTypes,
   userPrompt: string,
   chatHistory: string,
+  systemPrompt: string | undefined = systemPrompts[promptType],
 ): Promise<string> {
   try {
     const response = await fetch("/api/chat", {
@@ -11,7 +12,7 @@ export default async function generateBotResponse(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        systemPrompt: systemPrompts[promptType],
+        systemPrompt: systemPrompt,
         chatHistory: chatHistory,
         userPrompt: userPrompt,
       }),

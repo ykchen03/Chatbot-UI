@@ -8,11 +8,13 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import PestControlIcon from "@mui/icons-material/PestControl";
 import CodeIcon from '@mui/icons-material/Code';
 import ChatIcon from '@mui/icons-material/Chat';
+import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import LinearProgress from '@mui/material/LinearProgress';
 import { Typography } from "@mui/material";
 import RMarkdown from "./components/RMarkdown";
 import generateBotResponse from "./lib/ChatBot";
 import { PromptTypes } from "./lib/prompts";
+import ParkFinder from "./lib/ParkFinder";
 
 const App = () => {
   type Message = {
@@ -55,7 +57,8 @@ const App = () => {
     if (promptType === 'debug') {
       setTimeout(() => {
         const botResponse = {
-          text: `\`\`\`cpp\n#include <iostream>\nusing namespace std;\nint main() {\n    cout << "Hello, World!";\n    return 0;\n}\n\`\`\`\n| Column 1 | Column 2 |\n|----------|----------|\n| Value 1  | Value 2  |`,
+          //text: `\`\`\`cpp\n#include <iostream>\nusing namespace std;\nint main() {\n    cout << "Hello, World!";\n    return 0;\n}\n\`\`\`\n| Column 1 | Column 2 |\n|----------|----------|\n| Value 1  | Value 2  |`,
+          text: inputValue,
           sender: "bot" as const,
         };
         setMessages((prev) => [...prev, botResponse]);
@@ -65,7 +68,7 @@ const App = () => {
       const chatHistory = messages
         .map((msg) => `${msg.sender === "user" ? "User" : "Bot"}: ${msg.text}`)
         .join("\n");
-      const botText = await generateBotResponse(
+      const botText = promptType === 'parkFinder' ? await ParkFinder(inputValue) : await generateBotResponse(
         promptType,
         inputValue,
         `Chat History: ${chatHistory}`,
@@ -78,7 +81,6 @@ const App = () => {
       setIsLoading(false);
     }
   };
-
   return (
     <>
       <ReAppBar />
@@ -178,6 +180,22 @@ const App = () => {
                   borderColor: "#424242",
                   "&:hover": {
                     backgroundColor: promptType === 'code' ? "#2A4A6D" : "transparent",
+                  },
+                }}
+              />
+              <Chip
+                icon={<LocalParkingIcon />}
+                label="Parking Lot"
+                variant={promptType === 'parkFinder' ? "filled" : "outlined"}
+                onClick={() => setPromptType('parkFinder')}
+                className="h-9"
+                sx={{
+                  backgroundColor: promptType === 'parkFinder' ? "#2A4A6D" : "transparent",
+                  "& .MuiChip-label": { color: promptType === 'parkFinder' ? "#48AAFF" : "white" },
+                  "& .MuiChip-icon": { fill: promptType === 'parkFinder' ? "#48AAFF" : "white" },
+                  borderColor: "#424242",
+                  "&:hover": {
+                    backgroundColor: promptType === 'parkFinder' ? "#2A4A6D" : "transparent",
                   },
                 }}
               />

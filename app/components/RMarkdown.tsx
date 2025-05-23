@@ -1,5 +1,6 @@
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import CodeBlock from "./MdComponents/CodeBlock";
 import Table from "./MdComponents/Table";
 
@@ -11,6 +12,7 @@ export default function RMarkdown({ children }: RMarkdownProps): React.JSX.Eleme
   return (
     <Markdown
       remarkPlugins={[remarkGfm]}
+      rehypePlugins={[rehypeRaw]}
       components={{
         h1(props) {
           return <h1 className="text-4xl font-bold my-4">{props.children}</h1>;
