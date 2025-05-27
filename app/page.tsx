@@ -12,7 +12,7 @@ import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import LinearProgress from '@mui/material/LinearProgress';
 import { Typography } from "@mui/material";
 import RMarkdown from "./components/RMarkdown";
-import generateBotResponse from "./lib/ChatBot";
+import ChatBot from "./lib/ChatBot";
 import { PromptTypes } from "./lib/prompts";
 import ParkFinder from "./lib/ParkFinder";
 
@@ -42,7 +42,6 @@ const App = () => {
 
   useEffect(() => {
     scrollToBottom();
-    //console.log("Messages updated:", messages);
   }, [messages]);
 
   const handleSend = async (): Promise<void> => {
@@ -68,13 +67,14 @@ const App = () => {
       const chatHistory = messages
         .map((msg) => `${msg.sender === "user" ? "User" : "Bot"}: ${msg.text}`)
         .join("\n");
-      const botText = promptType === 'parkFinder' ? await ParkFinder(inputValue) : await generateBotResponse(
+      const botText = promptType === 'parkFinder' ? await ParkFinder(inputValue) : await ChatBot(
         promptType,
         inputValue,
         `Chat History: ${chatHistory}`,
       );
+      console.log("Bot response:", botText);
       const botMessage = {
-        text: botText,
+        text: botText.choices[0].message.content,
         sender: "bot" as const,
       };
       setMessages((prev) => [...prev, botMessage]);

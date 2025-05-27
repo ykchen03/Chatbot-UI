@@ -1,4 +1,4 @@
-export async function GET(req: Request): Promise<Response> {
+export async function GET(): Promise<Response> {
   try {
     const response = await fetch(
       "https://hispark.hccg.gov.tw/OpenData/GetParkInfo",

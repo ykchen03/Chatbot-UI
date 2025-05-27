@@ -1,7 +1,7 @@
 export async function POST(request: Request): Promise<Response> {
   try {
-    const { systemPrompt, chatHistory, userPrompt } = await request.json();
-    const response = await fetch(
+    const { systemPrompt, userPrompt, tools } = await request.json();
+    const data = await fetch(
       process.env.NODE_ENV === "development"
         ? "http://localhost:8080/v1/chat/completions"
         : "https://social-husky-discrete.ngrok-free.app/v1/chat/completions",
@@ -15,18 +15,23 @@ export async function POST(request: Request): Promise<Response> {
           messages: [
             {
               role: "system",
-              content: `${systemPrompt} ${chatHistory}`,
+              content: `${systemPrompt}`,
             },
             {
               role: "user",
               content: userPrompt,
             },
           ],
+          tools: tools,
         }),
       }
-    );
-    const data = await response.json();
-    return new Response(JSON.stringify(data.choices[0].message.content), {
+    ).then((res) => {
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      return res.json();
+    });
+    return new Response(JSON.stringify(data), {
       status: 200,
     });
   } catch (error) {

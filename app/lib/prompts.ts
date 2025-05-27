@@ -1,7 +1,7 @@
 export const systemPrompts = {
-    chat: "You are a helpful assistant.",
-    code: "You are a helpful coding assistant. Answer with code examples.",
-    parkFinder: "Function calling not completed",
+    chat: "You are a helpful chatbot.",
+    code: "You are a programming assistant. Respond with complete code examples.",
+    parkFinder: "",
     debug: "",
 }
 
