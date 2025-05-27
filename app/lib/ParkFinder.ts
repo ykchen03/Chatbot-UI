@@ -112,7 +112,7 @@ async function parking_lots_finder(args: ParkingLotsFinderArgs): Promise<any> {
 //Please found the parking lots around Hsinchu train station about 500 meters
 
 export default async function ParkFinder(userPrompt: string): Promise<any> {
-  const FUNCTION_SCHEMA = await fetch("data/function_schema.json").then((res) =>
+  const FUNCTION_SCHEMA: any[] = await fetch("data/function_schema.json").then((res) =>
     res.json()
   );
   const FUNCTION_MAP = {
@@ -122,19 +122,20 @@ export default async function ParkFinder(userPrompt: string): Promise<any> {
 
   type FunctionMapKey = keyof typeof FUNCTION_MAP;
   const SYSTEM_PROMPT = [
-    `You are a Function Calling Model for getting location info.
-  Parse the name of location and call locationIQ_search(location: string).
+    `You are a Tool Calling Model for getting location info.
+  Parse the location from user prompt and call locationIQ_search.
+  example: locationIQ_search({"location": "Taipei 101"})
   If user prompt is no related to parking lot, return the reason to user in your way.
-  Do not call other function or skip the function call.
   Generate text response is not allowed.`,
-    `You are a Function Calling Model for Searching Parking lot.
+    `You are a Tool Calling Model for Searching Parking lot.
   You got the address and coordiante of the location.
   Supportted city list: [Keelung,Taipei,Taoyuan,Hsinchu,Taichung,Changhua,Tainan,Kaohsuing]
   If the address is not in the list, return the reason to user in your way.
-  Else, pick one city in the list and call parking_lots_finder(city: city, latitude: number, longitude: number, radius: number(meter)).
+  Else, pick one city in the list and call parking_lots_finder (radius: meter).
   (The string of city must mathch the city in the list, case sensitive)
   Do not call other function or skip the function call.
   Generate text response is not allowed.
+  Response with tool_calls with name and args(json) not message.
   The data is below:`,
     `You are a assistant for Searching Parking lot.
   Show the parking lots realtime information in your way.
@@ -143,19 +144,21 @@ export default async function ParkFinder(userPrompt: string): Promise<any> {
   ];
 
   let callReturn: string = "";
-  for (const prompt of SYSTEM_PROMPT) {
+  FUNCTION_SCHEMA.map( async (func, index)=> {
+    console.log("Prompt:", SYSTEM_PROMPT[index]);
+    console.log("Function Schema:", [func]);
     const response = await ChatBot(
       "parkFinder",
       userPrompt,
-      prompt,
       undefined,
-      FUNCTION_SCHEMA
+      SYSTEM_PROMPT[index],
+      [func]
     );
     console.log("Response:", response);
     const toolCalls = response?.choices?.[0]?.message?.tool_calls ?? [];
     if (toolCalls.length === 0) {
       return (
-        response?.choices?.[0]?.message?.content ||
+        response ||
         "I can't help you with that."
       );
     }
@@ -169,6 +172,6 @@ export default async function ParkFinder(userPrompt: string): Promise<any> {
     } else {
       throw new Error(`Function ${functionName} is not defined.`);
     }
-  }
+  });
   return callReturn;
 }

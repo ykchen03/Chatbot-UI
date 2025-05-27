@@ -2,7 +2,7 @@ import { systemPrompts, PromptTypes } from "./prompts";
 export default async function ChatBot(
   promptType: PromptTypes,
   userPrompt: string,
-  chatHistory: string,
+  chatHistory?: string,
   systemPrompt?: string,
   tools: any[] = [],
 ): Promise<any> {
@@ -14,7 +14,7 @@ export default async function ChatBot(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        systemPrompt: systemPrompt + " " + chatHistory,
+        systemPrompt: systemPrompt + " " + chatHistory || "",
         userPrompt: userPrompt,
         tools: tools,
       }),
