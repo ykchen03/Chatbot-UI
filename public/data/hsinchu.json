@@ -1,0 +1,237 @@
+[
+  {
+    "id": "004",
+    "recharge": 1,
+    "price": 20
+  },
+  {
+    "id": "008",
+    "recharge": 1,
+    "price": 20
+  },
+  {
+    "id": "009",
+    "recharge": 1,
+    "price": 20
+  },
+  {
+    "id": "010",
+    "recharge": 1,
+    "price": 20
+  },
+  {
+    "id": "020",
+    "recharge": 0,
+    "price": 30
+  },
+  {
+    "id": "029",
+    "recharge": 1,
+    "price": 30
+  },
+  {
+    "id": "030",
+    "recharge": 1,
+    "price": 30
+  },
+  {
+    "id": "031",
+    "recharge": 1,
+    "price": 30
+  },
+  {
+    "id": "046",
+    "recharge": 1,
+    "price": 30
+  },
+  {
+    "id": "047",
+    "recharge": 1,
+    "price": 30
+  },
+  {
+    "id": "062",
+    "recharge": 0,
+    "price": 30
+  },
+  {
+    "id": "067",
+    "recharge": 1,
+    "price": 20
+  },
+  {
+    "id": "071",
+    "recharge": 0,
+    "price": 30
+  },
+  {
+    "id": "072",
+    "recharge": 1,
+    "price": 30
+  },
+  {
+    "id": "073",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "075",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "076",
+    "recharge": 1,
+    "price": 20
+  },
+  {
+    "id": "077",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "078",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "080",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "081",
+    "recharge": 1,
+    "price": 20
+  },
+  {
+    "id": "082",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "084",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "085",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "086",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "087",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "088",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "089",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "090",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "092",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "093",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "094",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "095",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "096",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "097",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "098",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "099",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "101",
+    "recharge": 1,
+    "price": 20
+  },
+  {
+    "id": "102",
+    "recharge": 1,
+    "price": 30
+  },
+  {
+    "id": "103",
+    "recharge": 1,
+    "price": 30
+  },
+  {
+    "id": "104",
+    "recharge": 1,
+    "price": 30
+  },
+  {
+    "id": "105",
+    "recharge": 0,
+    "price": 40
+  },
+  {
+    "id": "106",
+    "recharge": 0,
+    "price": 40
+  },
+  {
+    "id": "108",
+    "recharge": 0,
+    "price": 20
+  },
+  {
+    "id": "109",
+    "recharge": 1,
+    "price": 30
+  },
+  {
+    "id": "113",
+    "recharge": 0,
+    "price": 30
+  },
+  {
+    "id": "114",
+    "recharge": 0,
+    "price": 100
+  }
+]
