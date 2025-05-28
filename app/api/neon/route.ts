@@ -30,7 +30,6 @@ export async function GET(req: NextRequest): Promise<Response> {
       ) AS subquery
       WHERE distance <= ${searchRadius}
     `;
-    console.log(data);
     return Response.json({
       data,
       timestamp,
