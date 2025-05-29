@@ -2,14 +2,14 @@
   {
     "type": "function",
     "function": {
-      "name": "locationIQ_search",
-      "description": "Get latitude, longitude and address for a given location name using LocationIQ API.",
+      "name": "location_search",
+      "description": "Get latitude, longitude and address for a given location name using OSM API.",
       "parameters": {
         "type": "object",
         "properties": {
           "location": {
             "type": "string",
-            "description": "Name of the location (e.g., 'Central Terminal')."
+            "description": "Name of the location (e.g., 'Central Terminal', 'Times Square')."
           }
         },
         "required": ["location"]

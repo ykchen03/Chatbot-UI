@@ -14,19 +14,19 @@ async function query_parking_lots(
   return data;
 }
 
-interface LocationIQSearchArgs {
+interface LocationSearchArgs {
   location: string;
 }
 
-interface LocationIQResult {
-  lat: number;
-  lon: number;
+interface LocationResult {
+  lat: string;
+  lon: string;
   address: string;
 }
 
-async function locationIQ_search(
-  args: LocationIQSearchArgs
-): Promise<LocationIQResult[]> {
+async function location_search(
+  args: LocationSearchArgs
+): Promise<LocationResult[]> {
   console.log("locationIQ_search args:", args);
   const { location } = args;
   try {
@@ -42,8 +42,8 @@ async function locationIQ_search(
 
     return [
       {
-        lat: parseFloat(result[0].lat || NaN),
-        lon: parseFloat(result[0].lon || NaN),
+        lat: result[0].lat || "",
+        lon: result[0].lon || "",
         address: result[0].display_name || "",
       },
     ];
@@ -122,7 +122,7 @@ export default async function ParkFinder(userPrompt: string): Promise<any> {
     res.json()
   );
   const FUNCTION_MAP = {
-    locationIQ_search: locationIQ_search,
+    location_search: location_search,
     parking_lots_finder: parking_lots_finder,
   } as const;
 
@@ -133,7 +133,7 @@ export default async function ParkFinder(userPrompt: string): Promise<any> {
 Your task:
 1. Extract only the location name (as a clean string, in English) from user input.
 2. Do not include additional context (e.g., "parking within 500 meters" — this is incorrect).
-3. Call \`locationIQ_search(location: string)\` with ONLY the location name, like "Taipei 101", "Hsinchu train station", etc.
+3. Call \`location_search(location: string)\` with ONLY the location name, like "Taipei 101", "Hsinchu train station", etc.
 
 Important Rules:
 - Do not generate any explanation or chat text when calling functions.
@@ -143,10 +143,10 @@ Important Rules:
 
 Examples (Correct):
 - User: "Find parking near Taipei 101"
-  → Call: locationIQ_search("Taipei 101")
+  → Call: location_search("Taipei 101")
 
 - User: "I need parking near Hsinchu High-Speed Rail"
-  → Call: locationIQ_search("Hsinchu High-Speed Rail")
+  → Call: location_search("Hsinchu High-Speed Rail")
 
 Examples (Incorrect):
 - ❌ "Taipei 101 parking within 500 meters"
@@ -169,7 +169,7 @@ Your task:
   3. Use a default \`radius\` of 500 meters if not specified by the user.
 
 Additional:
-- If the address or coordinates are missing (LocationIQ failed), return an error message instead of calling the function.
+- If the address or coordinates are missing (Location Geocoding failed), return an error message instead of calling the function.
 - Do not generate or include any text response — only call the function with JSON.
 - Only one function call is allowed per request.
 
