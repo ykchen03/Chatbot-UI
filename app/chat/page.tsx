@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import ReAppBar from "../components/AppBar";
+import ChatAppBar from "../components/AppBar";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Chip from "@mui/material/Chip";
@@ -201,7 +201,7 @@ export default function App() {
 
   return (
     <>
-      <ReAppBar conversations={conversations} newChat={newChat} setCurrentConversation={setCurrentConversation} deleteConversation={deleteConversation}>
+      <ChatAppBar conversations={conversations} newChat={newChat} setCurrentConversation={setCurrentConversation} deleteConversation={deleteConversation}>
         <div
           className={`relative flex min-h-[calc(100vh-64px)] max-h-[calc(100vh-185px)] flex-1 flex-col mx-auto max-w-3xl ${
             messages.length === 0 && "justify-center"
@@ -307,7 +307,7 @@ export default function App() {
             AI can make mistakes. Check important info.
           </div>
         </div>
-      </ReAppBar>
+      </ChatAppBar>
     </>
   );
 }
