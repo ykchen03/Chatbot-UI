@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { createClient } from '@/app/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useState } from "react";
+import { createClient } from "@/app/lib/supabase/client";
+import { useRouter } from "next/navigation";
 import {
   Box,
   Button,
@@ -10,44 +10,62 @@ import {
   Typography,
   Alert,
   CircularProgress,
-} from '@mui/material'
+  Link,
+} from "@mui/material";
+import { AuthAppBar } from "@/app/components/AppBar";
+import { styled } from "@mui/material/styles";
+
+const TextFieldStyled = styled(TextField)(({ theme }) => ({
+  "& .MuiInputBase-input": {
+    color: "#424242",
+  },
+  "& .MuiInputLabel-root": {
+    color: "white",
+  },
+  "& .MuiInputLabel-shrink": {
+    color: theme.palette.primary.main
+  },
+  "& .MuiOutlinedInput-root": {
+    borderRadius: 99999,
+    "& fieldset": {
+      borderColor: "#424242",
+    },
+    "&:hover fieldset": {
+      borderColor: "#424242",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: theme.palette.primary.main,
+    },
+  },
+}));
 
 export default function SignIn() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isSignUp, setIsSignUp] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const router = useRouter()
-  const supabase = createClient()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+  const supabase = createClient();
 
   const handleAuth = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
     try {
-      if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-        })
-        if (error) throw error
-        alert('Check your email for the confirmation link!')
-      } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
-        })
-        if (error) throw error
-        router.push('/chat')
-      }
+        });
+        if (error) throw error;
+        router.push("/chat");
+      
     } catch (error: any) {
-      setError(error.message)
+      setError(error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Box
@@ -55,22 +73,16 @@ export default function SignIn() {
       alignItems="center"
       justifyContent="center"
       minHeight="100vh"
-      bgcolor="#0a1929"
+      className="text-white! bg-charcoal"
     >
+      <AuthAppBar />
       <Box
+        maxWidth="21.25rem"
         component="form"
         onSubmit={handleAuth}
-        sx={{
-          p: 4,
-          bgcolor: 'background.paper',
-          borderRadius: 2,
-          boxShadow: 3,
-          width: '100%',
-          maxWidth: 400,
-        }}
       >
-        <Typography variant="h4" align="center" fontWeight="bold" mb={2}>
-          {isSignUp ? 'Sign Up' : 'Sign In'}
+        <Typography fontSize="2rem" align="center" fontWeight={500} mb={4}>
+          Welcome Back
         </Typography>
 
         {error && (
@@ -79,8 +91,8 @@ export default function SignIn() {
           </Alert>
         )}
 
-        <TextField
-          label="Email"
+        <TextFieldStyled
+          label="Email address"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -89,7 +101,7 @@ export default function SignIn() {
           margin="normal"
         />
 
-        <TextField
+        <TextFieldStyled
           label="Password"
           type="password"
           value={password}
@@ -98,28 +110,31 @@ export default function SignIn() {
           required
           margin="normal"
         />
-
         <Button
           type="submit"
           variant="contained"
           color="primary"
           fullWidth
           disabled={loading}
-          sx={{ mt: 2, mb: 1 }}
+          sx={{ mt: "1.5rem", borderRadius: 99999, textTransform: "none", backgroundColor: "black", "&:hover": { backgroundColor: "#616161" }, height: "3.25rem", fontSize: "1rem"} }
         >
-          {loading ? <CircularProgress size={24} color="inherit" /> : (isSignUp ? 'Sign Up' : 'Sign In')}
+          {loading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : "Continue"}
         </Button>
 
-        <Button
-          type="button"
-          onClick={() => setIsSignUp(!isSignUp)}
-          fullWidth
-          color="secondary"
-          sx={{ textTransform: 'none' }}
-        >
-          {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
-        </Button>
+        <Typography
+          variant="body2"
+          align="center"
+          fontSize="1rem"
+          fontWeight={400}
+          sx={{ mt: 2, color: "#B0BEC5" }}>
+          Don't have an account?{" "}
+          <Link href="" color="primary" underline="hover">
+            Sign Up
+          </Link>
+          </Typography>
       </Box>
     </Box>
-  )
+  );
 }

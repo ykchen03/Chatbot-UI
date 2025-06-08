@@ -286,3 +286,40 @@ export function HomeAppBar() {
     </AppBar>
   );
 }
+
+export function AuthAppBar() {
+  return (
+    <AppBar
+      position="fixed"
+      sx={{ backgroundColor: "transparent", height: "56px" }}
+      elevation={0}
+    >
+      <Toolbar>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          edge="start"
+          sx={{ mr: 2 }}
+        >
+          <QuickreplyIcon />
+        </IconButton>
+        <Typography
+          variant="h6"
+          noWrap
+          component="a"
+          href=""
+          sx={{
+            flexGrow: 1,
+            fontFamily: "monospace",
+            fontWeight: 700,
+            letterSpacing: ".3rem",
+            color: "inherit",
+            textDecoration: "none",
+          }}
+        >
+          Llama 3.1
+        </Typography>
+      </Toolbar>
+    </AppBar>
+  );
+}
