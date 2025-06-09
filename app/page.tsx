@@ -1,17 +1,15 @@
 "use client";
-import { Button, Fab, Typography, Link } from "@mui/material";
+import { Fab, Typography, Link } from "@mui/material";
 import { HomeAppBar } from "./components/AppBar";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white py-10 px-6 content-center">
       <HomeAppBar />
       <div className="max-w-5xl mx-auto text-center">
-        <p className="text-sm  mb-8 font-[500]">
-          Llama 3.1 Nemotron Ultra
-        </p>
+        <p className="text-sm  mb-8 font-[500]">Llama 3.1 Nemotron Ultra</p>
         <h1 className="text-6xl font-[500] mb-8">
           Enjoy fast, secure, and easy conversations.
         </h1>
@@ -22,6 +20,7 @@ export default function Home() {
           <Fab
             variant="extended"
             size="medium"
+            href="/chat"
             sx={{
               backgroundColor: "white",
               color: "black",
@@ -32,7 +31,14 @@ export default function Home() {
             </Typography>
             <ArrowOutwardIcon sx={{ marginLeft: 1 }} fontSize="inherit" />
           </Fab>
-          <Link className="self-center" href="https://build.nvidia.com/nvidia/llama-3_1-nemotron-ultra-253b-v1" color="inherit" fontSize="inherit" underline="none">
+          <Link
+            className="self-center"
+            href="https://build.nvidia.com/nvidia/llama-3_1-nemotron-ultra-253b-v1"
+            target="_blank"
+            color="inherit"
+            fontSize="inherit"
+            underline="none"
+          >
             {"Learn More"}
             <ArrowForwardIosIcon sx={{ marginLeft: 1 }} fontSize="inherit" />
           </Link>

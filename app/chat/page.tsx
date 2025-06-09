@@ -5,11 +5,12 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Chip from "@mui/material/Chip";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ChatIcon from "@mui/icons-material/Chat";
+import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 import LinearProgress from "@mui/material/LinearProgress";
 import { Typography } from "@mui/material";
 import RMarkdown from "../components/RMarkdown";
 import { useAuth } from "../contexts/AuthContext";
+import { redirect } from "next/navigation";
 
 interface Message {
   id: string;
@@ -31,6 +32,7 @@ export default function App() {
     null
   );
   const [messages, setMessages] = useState<Message[]>([]);
+  const [reasoning, setReasoning] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loadingConversations, setLoadingConversations] = useState(true);
@@ -43,6 +45,7 @@ export default function App() {
 
   useEffect(() => {
     if (currentConversation) {
+      if (isLoading) return; // Prevent loading messages while sending a new one
       loadMessages(currentConversation);
     } else {
       setMessages([]);
@@ -104,9 +107,14 @@ export default function App() {
     setInputMessage("");
     setIsLoading(true);
     setMessages((prev) => [
-          ...prev,
-          { id:"tmp",role: "user", content: messageText, created_at: new Date().toISOString() },
-        ]);
+      ...prev,
+      {
+        id: "tmp",
+        role: "user",
+        content: messageText,
+        created_at: new Date().toISOString(),
+      },
+    ]);
 
     try {
       const response = await fetch("/api/chat", {
@@ -117,6 +125,7 @@ export default function App() {
         body: JSON.stringify({
           message: messageText,
           conversationId: currentConversation,
+          reasoning: reasoning,
         }),
       });
 
@@ -167,26 +176,13 @@ export default function App() {
   };
 
   if (!user) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4 text-white">
-            Please sign in to continue
-          </h1>
-          <a
-            href="/auth/signin"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Sign In
-          </a>
-        </div>
-      </div>
-    );
+    redirect("/auth/signin");
   }
 
   const newChat = () => {
     setMessages([]);
     setInputMessage("");
+    setCurrentConversation(null);
   };
 
   const handleInputChange = (
@@ -201,7 +197,14 @@ export default function App() {
 
   return (
     <>
-      <ChatAppBar conversations={conversations} newChat={newChat} setCurrentConversation={setCurrentConversation} deleteConversation={deleteConversation}>
+      <ChatAppBar
+        conversations={conversations}
+        newChat={newChat}
+        currentConversation={currentConversation}
+        setCurrentConversation={setCurrentConversation}
+        deleteConversation={deleteConversation}
+        user={user}
+      >
         <div
           className={`relative flex min-h-[calc(100vh-64px)] max-h-[calc(100vh-185px)] flex-1 flex-col mx-auto max-w-3xl ${
             messages.length === 0 && "justify-center"
@@ -229,14 +232,8 @@ export default function App() {
               {isLoading && (
                 <div className="flex flex-col max-w-70% py-3 px-4 rounded-s-3xl leading-1.4 message bot-message text-gray-400">
                   <LinearProgress color={"inherit"} />
-                  {/* <div className="flex gap-1 items-center justify-start typing-indicator">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div> */}
                 </div>
               )}
-              {/* <div ref={messagesEndRef} /> */}
             </div>
           ) : (
             <div
@@ -244,7 +241,7 @@ export default function App() {
                 messages.length > 0 ? " fade-out" : ""
               }`}
             >
-              <Typography variant="h4">Hi there! 👋</Typography>
+              <Typography fontSize="28px" fontWeight={400}>Hi there! 👋</Typography>
             </div>
           )}
           <div className="grid rounded-[28px] border text-base input-area text-white">
@@ -271,25 +268,25 @@ export default function App() {
               <div className="flex gap-2">
                 <Chip
                   className="h-9"
-                  icon={<ChatIcon />}
-                  label="Chat"
-                  /*variant={promptType === "chat" ? "filled" : "outlined"}
-                onClick={() => setPromptType("chat")}
+                  icon={<EmojiObjectsIcon />}
+                  label="Reasoning"
+                  variant={reasoning ? "filled" : "outlined"}
+                onClick={() => setReasoning(!reasoning)}
                 sx={{
                   backgroundColor:
-                    promptType === "chat" ? "#2A4A6D" : "transparent",
+                    reasoning? "#2A4A6D" : "transparent",
                   "& .MuiChip-label": {
-                    color: promptType === "chat" ? "#48AAFF" : "white",
+                    color: reasoning ? "#48AAFF" : "white",
                   },
                   "& .MuiChip-icon": {
-                    fill: promptType === "chat" ? "#48AAFF" : "white",
+                    fill: reasoning ? "#48AAFF" : "white",
                   },
                   borderColor: "#424242",
                   "&:hover": {
                     backgroundColor:
-                      promptType === "chat" ? "#2A4A6D" : "transparent",
+                      reasoning ? "#2A4A6D" : "transparent",
                   },
-                }}*/
+                }}
                 />
               </div>
               <div>
@@ -303,7 +300,7 @@ export default function App() {
               </div>
             </Stack>
           </div>
-          <div className="flex justify-center items-center mb-3 text-xs text-white">
+          <div className="flex justify-center items-center mb-3 text-xs text-white py-2">
             AI can make mistakes. Check important info.
           </div>
         </div>

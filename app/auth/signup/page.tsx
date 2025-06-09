@@ -21,27 +21,44 @@ const TextFieldStyled = styled(TextField)(({ theme }) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignUp() {
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
   const supabase = createClient();
 
-  const handleAuth = async (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
+    // Password validation
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      setLoading(false);
+      return;
+    }
+
     try {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
-        router.push("/chat");
-      
+      const { error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        phone: phone,
+      });
+
+      if (error) throw error;
+
+      router.push("/chat");
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -61,10 +78,10 @@ export default function SignIn() {
       <Box
         maxWidth="21.25rem"
         component="form"
-        onSubmit={handleAuth}
+        onSubmit={handleSignUp}
       >
         <Typography fontSize="2rem" align="center" fontWeight={500} mb={4}>
-          Welcome Back
+          Create Account
         </Typography>
 
         {error && (
@@ -84,6 +101,16 @@ export default function SignIn() {
         />
 
         <TextFieldStyled
+          label="Phone"
+          type="tel"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          fullWidth
+          required
+          margin="normal"
+        />
+
+        <TextFieldStyled
           label="Password"
           type="password"
           value={password}
@@ -92,6 +119,19 @@ export default function SignIn() {
           required
           margin="normal"
         />
+
+        <TextFieldStyled
+          label="Confirm Password"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          fullWidth
+          required
+          margin="normal"
+          error={confirmPassword !== "" && password !== confirmPassword}
+          helperText={confirmPassword !== "" && password !== confirmPassword ? "Passwords do not match" : ""}
+        />
+
         <Button
           type="submit"
           variant="contained"
@@ -102,7 +142,7 @@ export default function SignIn() {
         >
           {loading ? (
             <CircularProgress size={24} color="inherit" />
-          ) : "Continue"}
+          ) : "Sign Up"}
         </Button>
 
         <Typography
@@ -111,11 +151,11 @@ export default function SignIn() {
           fontSize="1rem"
           fontWeight={400}
           sx={{ mt: 2,}}>
-          Don't have an account?{" "}
-          <Link href="/auth/signup" color="primary" underline="hover">
-            Sign Up
+          Already have an account?{" "}
+          <Link href="/auth/signin" color="primary" underline="hover">
+            Sign In
           </Link>
-          </Typography>
+        </Typography>
       </Box>
     </Box>
   );

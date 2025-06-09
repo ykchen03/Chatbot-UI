@@ -21,6 +21,12 @@ import QuickreplyIcon from "@mui/icons-material/Quickreply";
 import EditDocumentIcon from "@mui/icons-material/EditDocument";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Fab } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Tooltip from "@mui/material/Tooltip";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { createClient } from "@/app/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 const drawerWidth = 240;
 
@@ -85,20 +91,26 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 interface ReAppBarProps {
   conversations: any[];
   newChat: () => void;
+  currentConversation: string | null;
   setCurrentConversation: (id: string) => void;
   deleteConversation: (id: string) => void;
+  user: any;
   children: React.ReactNode;
 }
 
 export default function ChatAppBar({
   conversations,
   newChat,
+  currentConversation,
   setCurrentConversation,
   deleteConversation,
+  user,
   children,
 }: ReAppBarProps): React.JSX.Element {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const router = useRouter();
+  const supabase = createClient();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -106,6 +118,30 @@ export default function ChatAppBar({
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Error signing out:', error.message);
+      } else {
+        router.push('/auth/signin');
+      }
+    } catch (error) {
+      console.error('Unexpected error during sign out:', error);
+    }
+    handleCloseUserMenu();
   };
 
   return (
@@ -137,19 +173,47 @@ export default function ChatAppBar({
             variant="h6"
             noWrap
             component="a"
-            href=""
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
+              fontFamily: "sans-serif",
               fontWeight: 700,
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
+              flexGrow: 1,
             }}
           >
             Llama 3.1
           </Typography>
+          <Box sx={{ flexGrow: 0}}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt={user.email} />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: '45px',}}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              <MenuItem onClick={() => handleLogout()}>
+                <Typography sx={{ textAlign: 'center' }}>Log Out</Typography>
+              </MenuItem>
+            </Menu>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -180,7 +244,7 @@ export default function ChatAppBar({
         <List>
           <ListItem
             disablePadding
-            className="hover:bg-charcoal rounded-2xl mb-8 text-sm"
+            className="hover:bg-charcoal mb-8 text-sm"
           >
             <ListItemButton onClick={() => newChat()}>
               <ListItemIcon>
@@ -198,17 +262,30 @@ export default function ChatAppBar({
             </ListItemButton>
           </ListItem>
           <Divider />
+          <ListItem
+              disablePadding
+              className="gap-2 mb-2 text-sm"
+            >
+              <ListItemButton disabled={true}>
+                <ListItemText
+                  primary={"Chats"}
+                  slotProps={{
+                    primary: { fontSize: "inherit", lineHeight: "inherit", className: "truncate whitespace-nowrap overflow-hidden" },
+                  }}
+                />
+              </ListItemButton>  
+            </ListItem>
           {conversations.map((c, index) => (
             <ListItem
               key={index}
               disablePadding
-              className="hover:bg-charcoal rounded-2xl gap-2 mb-2 text-sm"
+              className={`hover:bg-charcoal gap-2 mb-2 text-sm ${currentConversation === c.id ? "bg-charcoal" : ""}`}
             >
               <ListItemButton onClick={() => setCurrentConversation(c.id)}>
                 <ListItemText
                   primary={c.title}
                   slotProps={{
-                    primary: { fontSize: "inherit", lineHeight: "inherit" },
+                    primary: { fontSize: "inherit", lineHeight: "inherit", className: "truncate whitespace-nowrap overflow-hidden" },
                   }}
                 />
               </ListItemButton>
@@ -253,10 +330,10 @@ export function HomeAppBar() {
           variant="h6"
           noWrap
           component="a"
-          href=""
+          href="/"
           sx={{
             flexGrow: 1,
-            fontFamily: "monospace",
+            fontFamily: "sans-serif",
             fontWeight: 700,
             letterSpacing: ".3rem",
             color: "inherit",
@@ -291,7 +368,7 @@ export function AuthAppBar() {
   return (
     <AppBar
       position="fixed"
-      sx={{ backgroundColor: "transparent", height: "56px" }}
+      sx={{ backgroundColor: "transparent", height: "56px", color: "black" }}
       elevation={0}
     >
       <Toolbar>
@@ -307,10 +384,10 @@ export function AuthAppBar() {
           variant="h6"
           noWrap
           component="a"
-          href=""
+          href="/"
           sx={{
             flexGrow: 1,
-            fontFamily: "monospace",
+            fontFamily: "sans-serif",
             fontWeight: 700,
             letterSpacing: ".3rem",
             color: "inherit",

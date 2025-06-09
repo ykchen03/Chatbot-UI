@@ -91,13 +91,3 @@ body {
   opacity: 0;
   pointer-events: none;
 }
-
-@keyframes swipe {
-  0% {
-    transform: translate(0);
-  }
-
-  100% {
-    transform: translate(-100%);
-  }
-}
