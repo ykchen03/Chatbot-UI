@@ -36,10 +36,11 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
+    const { id } = await params;
     
     // Get the current user from Supabase
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -50,7 +51,7 @@ export async function PATCH(
 
     const updates = await request.json();
     const conversation = await DatabaseService.updateConversation(
-      params.id,
+      id,
       user.id,
       updates
     );
@@ -62,10 +63,11 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
+    const { id } = await params;
     
     // Get the current user from Supabase
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -74,7 +76,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    await DatabaseService.deleteConversation(params.id, user.id);
+    await DatabaseService.deleteConversation(id, user.id);
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
