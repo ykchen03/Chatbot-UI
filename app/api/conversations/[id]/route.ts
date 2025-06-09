@@ -4,10 +4,11 @@ import { DatabaseService } from "@/app/lib/database";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
+    const { id } = await params;
     
     // Get the current user from Supabase
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -17,7 +18,7 @@ export async function GET(
     }
 
     const conversation = await DatabaseService.getConversation(
-      params.id,
+      id,
       user.id
     );
     if (!conversation) {
