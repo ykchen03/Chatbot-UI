@@ -61,20 +61,16 @@ export async function POST(request: NextRequest) {
     const messages = await DatabaseService.getMessages(conversation.id);
     const recentMessages = messages.slice(-10);
 
-    // Prepare messages for OpenAI
-    const openaiMessages = recentMessages.map((msg) => ({
-      role: msg.role as "user" | "assistant" | "system",
-      content: msg.content,
-    }));
-    openaiMessages.push({
-      role: "system",
-      content: `detailed thinking ${reasoning ? "on" : "off"}`,
-    });
-
     // Get AI response
     const completion = await openai.chat.completions.create({
       model,
-      messages: openaiMessages,
+      messages: [
+        {
+          role: "system",
+          content: `detailed thinking ${reasoning ? "on" : "off"}`,
+        },
+        ...recentMessages,
+      ],
       temperature: 0.7,
     });
 

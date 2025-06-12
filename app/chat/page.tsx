@@ -5,7 +5,7 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Chip from "@mui/material/Chip";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
+import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Typography } from "@mui/material";
 import RMarkdown from "../components/RMarkdown";
@@ -196,85 +196,84 @@ export default function App() {
   };
 
   return (
-    <>
-      <ChatAppBar
-        conversations={conversations}
-        newChat={newChat}
-        currentConversation={currentConversation}
-        setCurrentConversation={setCurrentConversation}
-        deleteConversation={deleteConversation}
-        user={user}
+    <ChatAppBar
+      conversations={conversations}
+      newChat={newChat}
+      currentConversation={currentConversation}
+      setCurrentConversation={setCurrentConversation}
+      deleteConversation={deleteConversation}
+      user={user}
+    >
+      <div
+        className={`relative flex min-h-[calc(100vh-64px)] max-h-[calc(100vh-185px)] flex-1 flex-col mx-auto max-w-3xl ${
+          messages.length === 0 && "justify-center"
+        }`}
       >
-        <div
-          className={`relative flex min-h-[calc(100vh-64px)] max-h-[calc(100vh-185px)] flex-1 flex-col mx-auto max-w-3xl ${
-            messages.length === 0 && "justify-center"
-          }`}
-        >
-          {currentConversation ? (
-            <div className="flex flex-col flex-auto overflow-y-auto p-5 gap-4 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200 [scrollbar-gutter:stable_both-edges] scrollbar">
-              {messages.length > 0 &&
-                messages?.map((message, index) => (
-                  <div
-                    key={index}
-                    className={`flex flex-col max-w-full py-3 px-4 leading-1.4 break-normal message text-white ${
-                      message.role === "user"
-                        ? "self-end user-message"
-                        : "self-start bot-message"
-                    }`}
-                  >
-                    {message.role === "user" ? (
-                      <p>{message.content}</p>
-                    ) : (
-                      <RMarkdown>{message.content}</RMarkdown>
-                    )}
-                  </div>
-                ))}
-              {isLoading && (
-                <div className="flex flex-col max-w-70% py-3 px-4 rounded-s-3xl leading-1.4 message bot-message text-gray-400">
-                  <LinearProgress color={"inherit"} />
-                </div>
-              )}
-            </div>
-          ) : (
-            <div
-              className={`flex flex-col items-center justify-center text-white h-full mb-7 fade-transition${
-                messages.length > 0 ? " fade-out" : ""
-              }`}
-            >
-              <Typography fontSize="28px" fontWeight={400}>Hi there! 👋</Typography>
-            </div>
-          )}
-          <div className="grid rounded-[28px] border text-base input-area text-white">
-            <textarea
-              ref={textareaRef}
-              disabled={isLoading}
-              className="scrollbar resize-none overflow-y-auto h-[3rem] max-h-[6rem] w-full px-4 py-3 outline-none"
-              value={inputMessage}
-              onChange={handleInputChange}
-              placeholder="Type your message..."
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  sendMessage();
-                }
-              }}
-            />
-            <Stack
-              className="m-2 items-center"
-              direction="row"
-              justifyContent="space-between"
-              spacing={0}
-            >
-              <div className="flex gap-2">
-                <Chip
-                  className="h-9"
-                  icon={<EmojiObjectsIcon />}
-                  label="Reasoning"
-                  variant={reasoning ? "filled" : "outlined"}
+        {messages.length > 0 ? (
+          <div className="flex flex-col flex-auto overflow-y-auto p-5 gap-4 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200 [scrollbar-gutter:stable_both-edges] scrollbar">
+            {messages?.map((message, index) => (
+              <div
+                key={index}
+                className={`flex flex-col max-w-full py-3 px-4 leading-1.4 break-normal message text-white ${
+                  message.role === "user"
+                    ? "self-end user-message"
+                    : "self-start bot-message"
+                }`}
+              >
+                {message.role === "user" ? (
+                  <p>{message.content}</p>
+                ) : (
+                  <RMarkdown>{message.content}</RMarkdown>
+                )}
+              </div>
+            ))}
+            {isLoading && (
+              <div className="flex flex-col max-w-70% py-3 px-4 rounded-s-3xl leading-1.4 message bot-message text-gray-400">
+                <LinearProgress color={"inherit"} />
+              </div>
+            )}
+          </div>
+        ) : (
+          <div
+            className={`flex flex-col items-center justify-center text-white h-full mb-7 fade-transition${
+              messages.length > 0 ? " fade-out" : ""
+            }`}
+          >
+            <Typography fontSize="28px" fontWeight={400}>
+              Hi there! 👋
+            </Typography>
+          </div>
+        )}
+        <div className="grid rounded-[28px] border text-base input-area text-white">
+          <textarea
+            ref={textareaRef}
+            disabled={isLoading}
+            className="scrollbar resize-none overflow-y-auto h-[3rem] max-h-[6rem] w-full px-4 py-3 outline-none"
+            value={inputMessage}
+            onChange={handleInputChange}
+            placeholder="Type your message..."
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+              }
+            }}
+          />
+          <Stack
+            className="m-2 items-center"
+            direction="row"
+            justifyContent="space-between"
+            spacing={0}
+          >
+            <div className="flex gap-2">
+              <Chip
+                className="h-9"
+                icon={<EmojiObjectsIcon />}
+                label="Reasoning"
+                variant={reasoning ? "filled" : "outlined"}
                 onClick={() => setReasoning(!reasoning)}
                 sx={{
-                  backgroundColor:
-                    reasoning? "#2A4A6D" : "transparent",
+                  backgroundColor: reasoning ? "#2A4A6D" : "transparent",
                   "& .MuiChip-label": {
                     color: reasoning ? "#48AAFF" : "white",
                   },
@@ -283,28 +282,26 @@ export default function App() {
                   },
                   borderColor: "#424242",
                   "&:hover": {
-                    backgroundColor:
-                      reasoning ? "#2A4A6D" : "transparent",
+                    backgroundColor: reasoning ? "#2A4A6D" : "transparent",
                   },
                 }}
-                />
-              </div>
-              <div>
-                <IconButton
-                  onClick={sendMessage}
-                  disabled={isLoading}
-                  className="flex-none bg-white! hover:bg-gray-200! h-9 w-9"
-                >
-                  <ArrowUpwardIcon fontSize="inherit" className="fill-black!" />
-                </IconButton>
-              </div>
-            </Stack>
-          </div>
-          <div className="flex justify-center items-center mb-3 text-xs text-white py-2">
-            AI can make mistakes. Check important info.
-          </div>
+              />
+            </div>
+            <div>
+              <IconButton
+                onClick={sendMessage}
+                disabled={isLoading}
+                className="flex-none bg-white! hover:bg-gray-200! h-9 w-9"
+              >
+                <ArrowUpwardIcon fontSize="inherit" className="fill-black!" />
+              </IconButton>
+            </div>
+          </Stack>
         </div>
-      </ChatAppBar>
-    </>
+        <div className="flex justify-center items-center mb-3 text-xs text-white py-2">
+          AI can make mistakes. Check important info.
+        </div>
+      </div>
+    </ChatAppBar>
   );
 }
