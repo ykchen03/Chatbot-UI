@@ -209,6 +209,9 @@ export default function ChatAppBar({
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              <MenuItem disabled={true}>
+                <Typography sx={{ textAlign: 'center' }}>{user.email}</Typography>
+              </MenuItem>
               <MenuItem onClick={() => handleLogout()}>
                 <Typography sx={{ textAlign: 'center' }}>Log Out</Typography>
               </MenuItem>
